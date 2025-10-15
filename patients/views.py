@@ -22,6 +22,9 @@ def add_exam(request):
         form = ExamForm()
     return render(request, 'patients/exam_form.html', {'form': form})
 
+def home(request):
+    return render(request, 'patients/home.html')
+
 from django.db.models import Count, Q
 from django.shortcuts import render
 from .models import Patient, Exam
