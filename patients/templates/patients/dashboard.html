@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard Sanitaria</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      font-family: 'Helvetica', sans-serif;
+      background-color: #f4f7fb;
+      margin: 0;
+    }
+    .dashboard {
+      display: grid;
+      grid-template-columns: 25% 75%;
+      gap: 20px;
+      padding: 20px;
+    }
+    .sidebar {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    .cards {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .card {
+      background: #e8f0fe;
+      padding: 15px;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .card h2 {
+      margin: 5px 0;
+      color: #2196f3;
+    }
+    .main {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+    canvas {
+      width: 100% !important;
+      height: 300px !important;
+      margin-top: 20px;
+    }
+    h1 {
+      color: #333;
+      text-align: center;
+    }
+    .add-btn {
+      display: block;
+      background-color: #2196F3;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      text-align: center;
+      margin-top: 15px;
+    }
+    .add-btn:hover {
+      background-color: #1976D2;
+    }
+  </style>
+</head>
+<body>
+  <div class="dashboard">
+    <div class="sidebar">
+      <h1>Saint Martins Clinic</h1>
+      <div class="cards">
+        <div class="card">
+          <h2>{{ totale_pazienti }}</h2>
+          <p>Totale Pazienti</p>
+        </div>
+        <div class="card">
+          <h2>{{ totale_esami }}</h2>
+          <p>Totale Esami</p>
+        </div>
+        <div class="card">
+          <h2>{{ percentuale_appropriati }}%</h2>
+          <p>Esami Appropriati</p>
+        </div>
+        <div class="card">
+          <h2>{{ media_esami }}</h2>
+          <p>Media Esami per Paziente</p>
+        </div>
+      </div>
+      <a href="{% url 'add_patient' %}" class="add-btn">➕ Aggiungi Paziente</a>
+      <a href="{% url 'add_exam' %}" class="add-btn">🧪 Aggiungi Esame</a>
+    </div>
+
+    <div class="main">
+      <h1>Statistiche Sanitarie</h1>
+      <canvas id="pieChart"></canvas>
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+
+  <script>
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    new Chart(pieCtx, {
+      type: 'pie',
+      data: {
+        labels: ['Appropriati', 'Non appropriati'],
+        datasets: [{
+          data: [{{ percentuale_appropriati|default:0 }}, {{ 100|default:0|floatformat:0 }} - {{ percentuale_appropriati|default:0 }}],
+          backgroundColor: ['#4CAF50', '#F44336'],
+        }]
+      },
+    });
+
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    new Chart(barCtx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels_pazienti|safe }},
+        datasets: [{
+          label: 'Numero esami per paziente',
+          data: {{ valori_esami|safe }},
+          backgroundColor: '#2196F3'
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
+        }
+      }
+    });
+  </script>
+</body>
+</html>
+
