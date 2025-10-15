@@ -2,11 +2,11 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Saint Martins Clinic</title>
+  <title>ValPeROC Dashboard</title>
   <style>
     body {
       font-family: 'Helvetica', sans-serif;
-      background: linear-gradient(135deg, #2196F3, #21CBF3);
+      background: linear-gradient(135deg, #1976D2, #42A5F5);
       color: white;
       height: 100vh;
       margin: 0;
@@ -16,19 +16,24 @@
       text-align: center;
     }
     .container {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.1);
       padding: 40px;
       border-radius: 12px;
       backdrop-filter: blur(10px);
+      max-width: 600px;
     }
     h1 {
-      font-size: 2.5em;
+      font-size: 2.2em;
       margin-bottom: 20px;
+    }
+    p {
+      font-size: 1.1em;
+      margin-bottom: 30px;
     }
     a {
       display: inline-block;
       background: white;
-      color: #2196F3;
+      color: #1976D2;
       padding: 12px 24px;
       border-radius: 8px;
       text-decoration: none;
@@ -36,16 +41,16 @@
       transition: 0.3s;
     }
     a:hover {
-      background: #1976D2;
+      background: #1565C0;
       color: white;
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Benvenuto alla Saint Martins Clinic</h1>
-    <p>Gestisci pazienti, esami e statistiche in un’unica piattaforma.</p>
-    <a href="{% url 'dashboard' %}">➡️ Vai alla Dashboard</a>
+    <h1>Benvenuto/a sulla dashboard di <strong>ValPeROC</strong></h1>
+    <p>Gestisci pazienti, esami e statistiche in modo semplice e veloce.</p>
+    <a href="{% url 'dashboard' %}">➡️ Accedi alla Dashboard</a>
   </div>
 </body>
 </html>
