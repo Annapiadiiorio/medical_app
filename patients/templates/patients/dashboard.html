@@ -2,7 +2,7 @@
 <html lang="it">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard Sanitaria</title>
+  <title>ValPeROC Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     body {
@@ -52,25 +52,12 @@
       color: #333;
       text-align: center;
     }
-    .add-btn {
-      display: block;
-      background-color: #2196F3;
-      color: white;
-      text-decoration: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      text-align: center;
-      margin-top: 15px;
-    }
-    .add-btn:hover {
-      background-color: #1976D2;
-    }
   </style>
 </head>
 <body>
   <div class="dashboard">
     <div class="sidebar">
-      <h1>Saint Martins Clinic</h1>
+      <h1>ValPeROC</h1>
       <div class="cards">
         <div class="card">
           <h2>{{ totale_pazienti }}</h2>
@@ -89,14 +76,13 @@
           <p>Media Esami per Paziente</p>
         </div>
       </div>
-      <a href="{% url 'add_patient' %}" class="add-btn">➕ Aggiungi Paziente</a>
-      <a href="{% url 'add_exam' %}" class="add-btn">🧪 Aggiungi Esame</a>
     </div>
 
     <div class="main">
       <h1>Statistiche Sanitarie</h1>
+
+      <!-- 🔹 Grafico a torta integrato come widget -->
       <canvas id="pieChart"></canvas>
-      <canvas id="barChart"></canvas>
     </div>
   </div>
 
@@ -105,32 +91,18 @@
     new Chart(pieCtx, {
       type: 'pie',
       data: {
-        labels: ['Appropriati', 'Non appropriati'],
+        labels: {{ labels_genere|safe }},
         datasets: [{
-          data: [{{ percentuale_appropriati|default:0 }}, {{ 100|default:0|floatformat:0 }} - {{ percentuale_appropriati|default:0 }}],
-          backgroundColor: ['#4CAF50', '#F44336'],
-        }]
-      },
-    });
-
-    const barCtx = document.getElementById('barChart').getContext('2d');
-    new Chart(barCtx, {
-      type: 'bar',
-      data: {
-        labels: {{ labels_pazienti|safe }},
-        datasets: [{
-          label: 'Numero esami per paziente',
-          data: {{ valori_esami|safe }},
-          backgroundColor: '#2196F3'
+          data: {{ data_genere|safe }},
+          backgroundColor: ['#42A5F5', '#F48FB1'],
         }]
       },
       options: {
-        scales: {
-          y: { beginAtZero: true }
+        plugins: {
+          legend: { position: 'bottom' },
         }
       }
     });
   </script>
 </body>
 </html>
-
