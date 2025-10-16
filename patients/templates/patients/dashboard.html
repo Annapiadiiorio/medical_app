@@ -9,97 +9,119 @@
       font-family: 'Helvetica', sans-serif;
       background-color: #f4f7fb;
       margin: 0;
-    }
-    .dashboard {
-      display: grid;
-      grid-template-columns: 25% 75%;
-      gap: 20px;
-      padding: 20px;
+      display: flex;
+      height: 100vh;
     }
     .sidebar {
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      width: 220px;
+      background: #1976D2;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-top: 30px;
+    }
+    .sidebar h2 {
+      margin-bottom: 30px;
+    }
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 0;
+      width: 100%;
+      text-align: center;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background: #1565C0;
+    }
+    .main {
+      flex-grow: 1;
+      padding: 30px;
+      overflow-y: auto;
     }
     .cards {
       display: flex;
-      flex-direction: column;
-      gap: 15px;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 30px;
     }
     .card {
-      background: #e8f0fe;
-      padding: 15px;
-      border-radius: 8px;
-      text-align: center;
-    }
-    .card h2 {
-      margin: 5px 0;
-      color: #2196f3;
-    }
-    .main {
+      flex: 1;
+      min-width: 200px;
       background: white;
       border-radius: 10px;
       padding: 20px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-align: center;
     }
     canvas {
       width: 100% !important;
+      max-width: 500px;
       height: 300px !important;
-      margin-top: 20px;
-    }
-    h1 {
-      color: #333;
-      text-align: center;
+      margin: 30px auto;
+      display: block;
     }
   </style>
 </head>
 <body>
-  <div class="dashboard">
-    <div class="sidebar">
-      <h1>ValPeROC</h1>
-      <div class="cards">
-        <div class="card">
-          <h2>{{ totale_pazienti }}</h2>
-          <p>Totale Pazienti</p>
-        </div>
-        <div class="card">
-          <h2>{{ totale_esami }}</h2>
-          <p>Totale Esami</p>
-        </div>
-        <div class="card">
-          <h2>{{ percentuale_appropriati }}%</h2>
-          <p>Esami Appropriati</p>
-        </div>
-        <div class="card">
-          <h2>{{ media_esami }}</h2>
-          <p>Media Esami per Paziente</p>
-        </div>
+  <div class="sidebar">
+    <h2>ValPeROC</h2>
+    <a href="{% url 'home' %}">🏠 Home</a>
+    <a href="{% url 'dashboard' %}">📊 Dashboard</a>
+    <a href="{% url 'add_patient' %}">➕ Aggiungi Paziente</a>
+    <a href="{% url 'add_exam' %}">🧪 Aggiungi Esame</a>
+  </div>
+
+  <div class="main">
+    <h1>Dashboard Statistiche</h1>
+
+    <div class="cards">
+      <div class="card">
+        <h3>{{ totale_pazienti }}</h3>
+        <p>Pazienti Totali</p>
+      </div>
+      <div class="card">
+        <h3>{{ totale_esami }}</h3>
+        <p>Totale Esami</p>
+      </div>
+      <div class="card">
+        <h3>{{ percentuale_appropriati }}%</h3>
+        <p>Esami Appropriati</p>
       </div>
     </div>
 
-    <div class="main">
-      <h1>Statistiche Sanitarie</h1>
-
-      <!-- 🔹 Grafico a torta integrato come widget -->
-      <canvas id="pieChart"></canvas>
-    </div>
+    <canvas id="genereChart"></canvas>
+    <canvas id="esamiChart"></canvas>
   </div>
 
   <script>
-    const pieCtx = document.getElementById('pieChart').getContext('2d');
-    new Chart(pieCtx, {
+    const genereCtx = document.getElementById('genereChart').getContext('2d');
+    new Chart(genereCtx, {
       type: 'pie',
       data: {
         labels: {{ labels_genere|safe }},
         datasets: [{
           data: {{ data_genere|safe }},
-          backgroundColor: ['#42A5F5', '#F48FB1'],
+          backgroundColor: ['#42A5F5', '#F06292']
+        }]
+      }
+    });
+
+    const esamiCtx = document.getElementById('esamiChart').getContext('2d');
+    new Chart(esamiCtx, {
+      type: 'bar',
+      data: {
+        labels: {{ labels_pazienti|safe }},
+        datasets: [{
+          label: 'Numero esami per paziente',
+          data: {{ data_esami|safe }},
+          backgroundColor: '#1976D2'
         }]
       },
       options: {
-        plugins: {
-          legend: { position: 'bottom' },
+        scales: {
+          y: { beginAtZero: true }
         }
       }
     });
