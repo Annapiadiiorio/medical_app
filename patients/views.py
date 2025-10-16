@@ -5,8 +5,6 @@ from .forms import PatientForm, ExamForm
 def home(request):
     return render(request, 'patients/home.html')
 
-
-
 def dashboard(request):
     maschi = Patient.objects.filter(genere="M").count()
     femmine = Patient.objects.filter(genere="F").count()
